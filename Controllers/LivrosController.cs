@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Aula02.Models;
 
 namespace Aula02.Controllers
 {
@@ -12,34 +13,38 @@ namespace Aula02.Controllers
     {
         // GET api/values
         [HttpGet]
-        public ActionResult<IEnumerable<string>> Get()
+        public ActionResult<IEnumerable<LivroModel>> ListarLivros()
         {
-            return new string[] { "livro1", "livro2" };
+            IList<LivroModel> livro = new List<LivroModel>();
+            livro.Add(new LivroModel("Livro Um", "Autor Um", 1986, "LV01A"));
+            livro.Add(new LivroModel("Livro Dois", "Autor Dois", 1996, "LV02A"));
+            livro.Add(new LivroModel("Livro Tres", "Autor Tres", 1986, "LV03A"));
+            livro.Add(new LivroModel("Livro Quatro", "Autor Quatro", 1986, "LV04A"));
+            return Ok(livro);
         }
 
         // GET api/values/5
-        [HttpGet("{id}")]
-        public ActionResult<string> Get(int id)
+        [HttpGet("{isbn}")]
+        public ActionResult<string> LivroId(string isbn)
         {
-            return "value";
+            LivroModel livro = new LivroModel("Livro Um", "Autor Um", 1986, isbn);
+            return Ok(livro);
         }
 
-        // POST api/values
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpGet("search")]
+        public ActionResult<string> Livro(string isbn, string titulo, string autor, int anopublicacao)
         {
+            LivroModel livro = new LivroModel(titulo, autor, anopublicacao, isbn);
+            return Ok(livro);
         }
 
-        // PUT api/values/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpGet("{isbn}/comentarios")]
+        public ActionResult<string> Comentarios(string isbn)
         {
-        }
-
-        // DELETE api/values/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
-        }
+            IList<ComentarioModel> livro = new List<ComentarioModel>();
+            livro.Add(new ComentarioModel("Comentario Um", isbn));
+            livro.Add(new ComentarioModel("Comentario Dois", isbn));
+            return Ok(livro);
+        }        
     }
 }
