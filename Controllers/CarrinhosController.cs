@@ -30,10 +30,16 @@ namespace Aula02.Controllers
         [HttpPost]
         public ActionResult<IEnumerable<CarrinhoModel>> Carrinho([FromBody] JObject livro)
         {
-            CarrinhoModel carrinho = new CarrinhoModel();
-            carrinho.IdCarrinho = "01";
-            carrinho.Livro = livro.ToObject<List<LivroModel>>();
-            return Ok(carrinho);
+            try
+            {
+                CarrinhoModel carrinho = new CarrinhoModel();
+                carrinho.IdCarrinho = "01";
+                carrinho.Livro = livro.ToObject<List<LivroModel>>();
+                return Created("", carrinho);
+            }
+            catch(Exception ex){
+                return BadRequest(ex.Message);
+            }
         }
 
         [HttpPost("encerrado")]

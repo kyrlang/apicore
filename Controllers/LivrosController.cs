@@ -31,7 +31,7 @@ namespace Aula02.Controllers
             return Ok(livro);
         }
 
-        [HttpGet("search")]
+        [HttpGet("filtro")]
         public ActionResult<string> Livro(string isbn, string titulo, string autor, int anopublicacao)
         {
             LivroModel livro = new LivroModel(titulo, autor, anopublicacao, isbn);
