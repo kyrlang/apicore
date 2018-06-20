@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Aula02.Models;
 using Newtonsoft.Json.Linq;
+using System.Net.Http;
+using Aula02.Classes;
 
 namespace Aula02.Controllers
 {
@@ -28,14 +30,18 @@ namespace Aula02.Controllers
 
         // GET api/values
         [HttpPost]
-        public ActionResult<IEnumerable<CarrinhoModel>> Carrinho([FromBody] JObject livro)
+        public ActionResult<IEnumerable<CarrinhoModel>> Carrinho([FromBody] CarrinhoModel carrinho)
         {
             try
             {
-                CarrinhoModel carrinho = new CarrinhoModel();
+                
                 carrinho.IdCarrinho = "01";
-                carrinho.Livro = livro.ToObject<List<LivroModel>>();
-                return Created("", carrinho);
+                carrinho.Livro = carrinho.Livro;
+
+                if(login(carrinho.Usuario))
+                    return Created("", carrinho);
+                else
+                    return BadRequest("Erro ao autenticar");
             }
             catch(Exception ex){
                 return BadRequest(ex.Message);
@@ -45,7 +51,13 @@ namespace Aula02.Controllers
         [HttpPost("encerrado")]
         public ActionResult<IEnumerable<CarrinhoModel>> FinalizarPedido(CarrinhoModel carrinho)
         {
-            return Ok("ok");
+            Transacao transacao = new Transacao();
+            HttpResponseMessage response;
+            response = GlobalVariablesTrans.WebApiClient.PostAsJsonAsync("transacao/cartao", transacao).Result;
+                if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                   return Ok("ok");
+                else
+                   return BadRequest();
         }        
 
         // GET api/values/5
@@ -66,5 +78,21 @@ namespace Aula02.Controllers
         {
             return Ok("Status do carrinho: " + idCarrinho + " é 1 ");
         }
+
+
+        private bool login(Usuario usuario){
+            try
+            {
+                HttpResponseMessage response;
+                response = GlobalVariablesAuth.WebApiClient.PostAsJsonAsync("autenticacao/login", usuario).Result;
+                    if (response.StatusCode == System.Net.HttpStatusCode.OK)
+                        return true;
+                    else
+                        return false;    
+            }
+            catch(Exception ex){
+                return false;
+            }
+        }        
     }
 }

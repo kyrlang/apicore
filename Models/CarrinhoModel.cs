@@ -7,5 +7,7 @@ namespace Aula02.Models
     {
         public string IdCarrinho {get; set;}
         public List<LivroModel> Livro {get; set;}
+
+        public Usuario Usuario {get;set;}
     }
 }

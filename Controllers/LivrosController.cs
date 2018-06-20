@@ -4,6 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Aula02.Models;
+using System.Net.Http;
+using Aula02.Classes;
 
 namespace Aula02.Controllers
 {
@@ -45,6 +47,7 @@ namespace Aula02.Controllers
             livro.Add(new ComentarioModel("Comentario Um", isbn));
             livro.Add(new ComentarioModel("Comentario Dois", isbn));
             return Ok(livro);
-        }        
+        }
+       
     }
 }
